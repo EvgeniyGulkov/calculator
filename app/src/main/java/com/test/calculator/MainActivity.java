@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 
@@ -95,6 +98,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (s1.contains(aS3 + "0" + i)) {
                             textField.setText(s1.replace(aS3 + "0" + i, aS3 + i));
                         }
+                    }
+                }
+
+                String []s4 = new String[]{"-.","+.","*.","\u00F7.","\u00D7.",".."};
+                for (String aS4 : s4) {
+                    if (s1.contains(aS4)) {
+                        textField.setText(s1.replace(aS4, aS4.substring(0,1)+"0."));
                     }
                 }
             }
@@ -178,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.dotBtn:
-
+                addDigit(".");
                 break;
 
             case R.id.rightDelim:
@@ -210,12 +220,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textField.setText(result);
     }
 
+    public boolean checkDots(String s) {
+        boolean checkFlag=true;
+        for (String res : s.split("-|\\+|\\u00F7|\\u00D7|\\*/")) {
+            int countDots=0;
+            if(res.contains(".")){
+                for (char c : res.toCharArray()){
+                    if (c == '.') countDots++;
+                }
+            }
+            checkFlag = countDots <= 1;
+        }
+        return checkFlag;
+    }
+
     private void getResult() {
     String inString = textField.getText().toString();
     inString = inString.replace("\u00F7","/");
     inString = inString.replace("\u00D7","*");
     String test = inString.replaceAll("[-+*/()]", "");
-    if(test.length()>0) {
+    if(test.length()>0 && checkDots(inString)) {
         ArrayList<String> outArrayString = convertString(inString);
         if (check) {
             double result = calculate(outArrayString);
