@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void afterTextChanged(Editable s) {
+                check = true;
                 String s1 = s.toString();
                 if (s1.length() == 2 && s1.substring(0).equals(0)) {
                     s1 = s1.substring(1);
@@ -200,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.clear_btn:
-                check = true;
                 textField.setText("0");
                 break;
         }
