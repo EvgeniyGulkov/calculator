@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -17,7 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 
@@ -28,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     EditText textField;
     TextView resultText;
-    StringBuffer sb;
     boolean check;
 
 
@@ -54,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         check=true;
-        sb = new StringBuffer();
         textField = findViewById(R.id.digitsField);
         resultText = findViewById(R.id.resultText);
 
@@ -243,7 +239,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayList<String> outArrayString = convertString(inString);
         if (check) {
             double result = calculate(outArrayString);
-            resultText.setText("=" + result);
+            String sResult = String.format (Locale.getDefault(),"%f", result);
+            if(sResult.contains(",")) {
+                int dotIndex = sResult.indexOf(",");
+                String tempString = sResult.substring(dotIndex+1, sResult.length());
+                for (int i = 0; i < sResult.length(); i++) {
+                    if(tempString.length()!=0 && tempString.charAt(tempString.length()-1)=='0'){
+                        tempString = tempString.substring(0,tempString.length()-1);
+                        sResult = sResult.substring(0,sResult.length()-1);
+                    }
+                }
+            }
+            if(sResult.charAt(sResult.length()-1)==','){
+                sResult = sResult.substring(0,sResult.length()-1);
+            }
+            resultText.setText(getResources().getString(R.string.result, sResult));
         }
     } else {
         resultText.setText(getResources().getString(R.string.error));
