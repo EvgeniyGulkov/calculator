@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 check = true;
                 String s1 = s.toString();
-                if (s1.length() == 2 && s1.substring(0,1).equals("0")) {
+                if (s1.length() == 2 && !s1.substring(1).equals(".") && s1.substring(0,1).equals("0")) {
                     s1 = s1.substring(1);
                     textField.setText(s1);
                 }
