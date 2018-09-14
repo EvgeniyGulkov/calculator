@@ -74,7 +74,6 @@ public class CalcKeyboard extends LinearLayout{
     OnClickListener onClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.d("click", "click");
             String key = "0";
             switch (v.getId()) {
                 case R.id.oneBtn:

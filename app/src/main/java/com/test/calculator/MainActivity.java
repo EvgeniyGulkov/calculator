@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.rootLayout);
         CalcKeyboard ck = new CalcKeyboard(getBaseContext());
         ck.addCallback(key -> {
+            hideKeyboard();
             if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
                 addDigit(key);
             }
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 check = true;
                 String s1 = s.toString();
-                if (s1.length() == 2 && s1.substring(0).equals(0)) {
+                if (s1.length() == 2 && s1.substring(0,1).equals("0")) {
                     s1 = s1.substring(1);
                     textField.setText(s1);
                 }
@@ -99,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                String[] s3 = new String[]{"-", "+", "\u00F7", "\u00D7", "*", "/"};
-                for (String aS3 : s3) {
+                s2 = new String[]{"-", "+", "\u00F7", "\u00D7", "*", "/"};
+                for (String aS3 : s2) {
                     for (int i = 0; i < 10; i++) {
                         if (s1.contains(aS3 + "0" + i)) {
                             textField.setText(s1.replace(aS3 + "0" + i, aS3 + i));
@@ -108,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                String []s4 = new String[]{"-.","+.","*.","\u00F7.","\u00D7.",".."};
-                for (String aS4 : s4) {
+                s2 = new String[]{"-.","+.","*.","\u00F7.","\u00D7.",".."};
+                for (String aS4 : s2) {
                     if (s1.contains(aS4)) {
                         textField.setText(s1.replace(aS4, aS4.substring(0,1)+"0."));
                     }
@@ -173,17 +174,18 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> outArrayString = PostfixConverter.convertString(inString, (check) -> {
             this.check = check;
             if(!check){
-                textField.setText(getResources().getString(R.string.error));
+                resultText.setText(getResources().getString(R.string.error));
             }
         });
-        Log.d("check",""+check);
+
         if (check) {
             double result = Calculate.calculate(outArrayString);
             String sResult = String.format(Locale.getDefault(), "%f", result);
             sResult = sResult.replace(",", ".");
             int dotIndex = sResult.indexOf(".");
-            String tempString = sResult.substring(dotIndex + 1, sResult.length());
-            for (int i = 0; i < sResult.length(); i++) {
+            String tempString = sResult.substring(dotIndex , sResult.length());
+            int max = tempString.length();
+            for (int i = 0; i < max; i++) {
                 if (tempString.length() != 0 && tempString.charAt(tempString.length() - 1) == '0') {
                     tempString = tempString.substring(0, tempString.length() - 1);
                     sResult = sResult.substring(0, sResult.length() - 1);
