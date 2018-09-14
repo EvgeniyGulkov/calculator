@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -44,8 +44,10 @@
 
     <LinearLayout
         android:id="@+id/calcKeyboard"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginStart="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -61,7 +63,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/del_last_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/leftDelim"
@@ -71,7 +73,7 @@
                 android:focusableInTouchMode="false"
                 android:onClick="onClick"
                 android:text="@string/left_scope"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/rightDelim"
@@ -81,7 +83,7 @@
                 android:focusableInTouchMode="false"
                 android:onClick="onClick"
                 android:text="@string/right_scope"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/divisionBtn"
@@ -90,7 +92,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/division_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -106,7 +108,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/seven_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/eightBtn"
@@ -115,7 +117,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/eight_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/nineBtn"
@@ -124,7 +126,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/nine_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/multiplBtn"
@@ -133,7 +135,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/multipl_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -149,7 +151,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/four_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/fiveBtn"
@@ -158,7 +160,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/five_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/sixBtn"
@@ -167,7 +169,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/six_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/minusBtn"
@@ -176,7 +178,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/minus_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -192,7 +194,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/one_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/twoBtn"
@@ -201,7 +203,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/two_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/threeBtn"
@@ -210,7 +212,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/three_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/plusBtn"
@@ -219,7 +221,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/plus_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -235,7 +237,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/clear_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/zeroBtn"
@@ -244,7 +246,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/zero_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/dotBtn"
@@ -253,7 +255,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/dot_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/resultBtn"
@@ -262,7 +264,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="@string/result_btn"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
     </LinearLayout>

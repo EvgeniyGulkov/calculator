@@ -13,28 +13,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.StringTokenizer;
-
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private String operators = "+-/*%";
-    private String delim = "() " + operators;
 
     EditText textField;
     TextView resultText;
     boolean check;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        LinearLayout linearLayout = findViewById(R.id.rootLayout);
 
+        LinearLayout linearLayout = findViewById(R.id.rootLayout);
         linearLayout.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 
             Rect r = new Rect();
@@ -235,13 +228,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     inString = inString.replace("\u00F7","/");
     inString = inString.replace("\u00D7","*");
     String test = inString.replaceAll("[-+*/()]", "");
+
     if(test.length()>0 && checkDots(inString)) {
-        ArrayList<String> outArrayString = convertString(inString);
+        ArrayList<String> outArrayString = PostfixConverter.convertString(inString, (check) -> {
+            this.check = check;
+            if(!check){
+                textField.setText(getResources().getString(R.string.error));
+            }
+        });
+        Log.d("check",""+check);
         if (check) {
-            double result = calculate(outArrayString);
+            double result = Calculate.calculate(outArrayString);
+            int dotIndex;
             String sResult = String.format (Locale.getDefault(),"%f", result);
-            if(sResult.contains(",")) {
-                int dotIndex = sResult.indexOf(",");
+            if(sResult.contains(",")|| sResult.contains(".")) {
+                if (sResult.contains(".")) {
+                    dotIndex = sResult.indexOf(".");
+                } else {
+                    dotIndex = sResult.indexOf(",");
+                }
                 String tempString = sResult.substring(dotIndex+1, sResult.length());
                 for (int i = 0; i < sResult.length(); i++) {
                     if(tempString.length()!=0 && tempString.charAt(tempString.length()-1)=='0'){
@@ -250,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
-            if(sResult.charAt(sResult.length()-1)==','){
+            if(sResult.charAt(sResult.length()-1)==',' || (sResult.charAt(sResult.length()-1)=='.')){
                 sResult = sResult.substring(0,sResult.length()-1);
             }
             resultText.setText(getResources().getString(R.string.result, sResult));
@@ -258,122 +263,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     } else {
         resultText.setText(getResources().getString(R.string.error));
     }
-    }
-
-    private boolean isOperator(String s) {
-        if (s.equals("unary")) return true;
-        for (int i = 0; i < operators.length(); i++) {
-            if (s.charAt(0) == operators.charAt(i)) return true;
-        }
-        return false;
-    }
-
-    private int operatorPriority(String s) {
-        if (s.equals("(")) return 1;
-        if (s.equals("+") || s.equals("-")) return 2;
-        if (s.equals("*") || s.equals("/")) return 3;
-        return 4;
-    }
-
-    private boolean isDelim(String s) {
-        if (s.length() != 1) return false;
-        for (int i = 0; i < delim.length(); i++) {
-            if (s.charAt(0) == delim.charAt(i)) return true;
-        }
-        return false;
-    }
-
-    public ArrayList<String> convertString(String inString) {
-        ArrayList<String> outString = new ArrayList<>();
-        ArrayDeque<String> stack = new ArrayDeque<>();
-        String prev = "";
-        String curr;
-        StringTokenizer st = new StringTokenizer(inString, delim, true);
-        while (st.hasMoreTokens()) {
-            curr = st.nextToken();
-            if (!st.hasMoreTokens() && isOperator(curr)) {
-                check = false;
-                return outString;
-            }
-            if (curr.equals(" ")) continue;
-            else if (isDelim(curr)) {
-                switch (curr) {
-                    case "(":
-                        stack.push(curr);
-                        break;
-                    case ")":
-                        if(stack.peek()!=null) {
-                            while (!stack.peek().equals("(")) {
-                                outString.add(stack.pop());
-                                if (stack.isEmpty()) {
-                                    check = false;
-                                    resultText.setText(getResources().getString(R.string.error));
-                                    return outString;
-                                }
-                            }
-                            stack.pop();
-                        }
-                        break;
-                    default:
-                        if (curr.equals("-") && (prev.equals("") || (isDelim(prev) && !prev.equals(")")))) {
-                            curr = "unary";
-                        } else {
-                            while (!stack.isEmpty() && (operatorPriority(curr) <= operatorPriority(stack.peek()))) {
-                                outString.add(stack.pop());
-                            }
-
-                        }
-                        stack.push(curr);
-                        break;
-                }
-
-            }
-
-            else {
-                outString.add(curr);
-            }
-            prev = curr;
-        }
-
-        while (!stack.isEmpty()) {
-            if (isOperator(stack.peek())) outString.add(stack.pop());
-            else {
-                resultText.setText(getResources().getString(R.string.error));
-                check = false;
-                return outString;
-            }
-        }
-        return outString;
-    }
-
-    public static Double calculate(ArrayList<String> inString) {
-        ArrayDeque<Double> stack = new ArrayDeque<>();
-        for (String s : inString) {
-            switch (s) {
-                case "+":
-                    stack.push(stack.pop() + stack.pop());
-                    break;
-                case "-": {
-                    Double b = stack.pop(), a = stack.pop();
-                    stack.push(a - b);
-                    break;
-                }
-                case "*":
-                    stack.push(stack.pop() * stack.pop());
-                    break;
-                case "/": {
-                    Double b = stack.pop(), a = stack.pop();
-                    stack.push(a / b);
-                    break;
-                }
-                case "unary":
-                    stack.push(-stack.pop());
-                    break;
-                default:
-                    stack.push(Double.valueOf(s));
-                    break;
-            }
-        }
-        return stack.pop();
     }
 }
