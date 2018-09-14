@@ -21,7 +21,7 @@
     <string name="minus_btn">-</string>
     <string name="digits_field_default">0</string>
     <string name="result">=%1$s</string>
-    <string name="left_scope">(</string>
-    <string name="right_scope">)</string>
+    <string name="left_delim">(</string>
+    <string name="right_delim">)</string>
     <string name="error">Error</string>
 </resources>

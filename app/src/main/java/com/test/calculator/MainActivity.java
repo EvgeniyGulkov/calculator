@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     EditText textField;
     TextView resultText;
@@ -28,6 +27,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         LinearLayout linearLayout = findViewById(R.id.rootLayout);
+        CalcKeyboard ck = new CalcKeyboard(getBaseContext());
+        ck.addCallback(key -> {
+            if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
+                addDigit(key);
+            }
+            if (key.equals("result")) {
+                getResult();
+            }
+            if (key.equals("clear")) {
+                clear();
+            }
+            if(key.equals("delete")){
+                deleteLast();
+            }
+
+        });
+
+        linearLayout.addView(ck);
         linearLayout.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 
             Rect r = new Rect();
@@ -108,97 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imm.hideSoftInputFromWindow(textField.getWindowToken(), 0);
     }
 
-    @Override
-    public void onClick(View view) {
-        String text = textField.getText().toString();
-        hideKeyboard();
-        switch (view.getId()) {
-            case R.id.oneBtn:
-                addDigit("1");
-                break;
-
-            case R.id.twoBtn:
-                addDigit("2");
-                break;
-
-            case R.id.threeBtn:
-                addDigit("3");
-                break;
-
-            case R.id.fourBtn:
-                addDigit("4");
-                break;
-
-            case R.id.fiveBtn:
-                addDigit("5");
-                break;
-
-            case R.id.sixBtn:
-                addDigit("6");
-                break;
-
-            case R.id.seven_btn:
-                addDigit("7");
-                break;
-
-            case R.id.eightBtn:
-                addDigit("8");
-                break;
-
-            case R.id.nineBtn:
-                addDigit("9");
-                break;
-
-            case R.id.minusBtn:
-                addDigit("-");
-                break;
-
-            case R.id.plusBtn:
-                addDigit("+");
-                break;
-
-            case R.id.multiplBtn:
-                addDigit("\u00D7");
-                break;
-
-            case R.id.divisionBtn:
-                addDigit("\u00F7");
-                break;
-
-            case R.id.resultBtn:
-                getResult();
-                break;
-
-            case R.id.delLastBtn:
-                if (text.length() > 1) {
-                    textField.setText(text.substring(0, text.length() - 1));
-                } else {
-                    textField.setText("0");
-                }
-                break;
-
-            case R.id.dotBtn:
-                addDigit(".");
-                break;
-
-            case R.id.rightDelim:
-                addDigit(")");
-                break;
-
-            case R.id.leftDelim:
-                addDigit("(");
-                break;
-
-            case R.id.zeroBtn:
-                addDigit("0");
-                break;
-
-            case R.id.clear_btn:
-                textField.setText("0");
-                break;
-        }
-    }
-
     private void addDigit(String s) {
         String s1 = textField.getText().toString();
         String result;
@@ -207,6 +133,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else
             result = s1 + s;
         textField.setText(result);
+    }
+
+    public void deleteLast(){
+        String text = textField.getText().toString();
+        if (text.length() > 1) {
+            textField.setText(text.substring(0, text.length() - 1));
+        } else {
+            textField.setText("0");
+        }
+    }
+
+    public void clear(){
+        textField.setText("0");
+        resultText.setText("");
     }
 
     public boolean checkDots(String s) {
@@ -239,23 +179,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("check",""+check);
         if (check) {
             double result = Calculate.calculate(outArrayString);
-            int dotIndex;
-            String sResult = String.format (Locale.getDefault(),"%f", result);
-            if(sResult.contains(",")|| sResult.contains(".")) {
-                if (sResult.contains(".")) {
-                    dotIndex = sResult.indexOf(".");
-                } else {
-                    dotIndex = sResult.indexOf(",");
-                }
-                String tempString = sResult.substring(dotIndex+1, sResult.length());
-                for (int i = 0; i < sResult.length(); i++) {
-                    if(tempString.length()!=0 && tempString.charAt(tempString.length()-1)=='0'){
-                        tempString = tempString.substring(0,tempString.length()-1);
-                        sResult = sResult.substring(0,sResult.length()-1);
-                    }
+            String sResult = String.format(Locale.getDefault(), "%f", result);
+            sResult = sResult.replace(",", ".");
+            int dotIndex = sResult.indexOf(".");
+            String tempString = sResult.substring(dotIndex + 1, sResult.length());
+            for (int i = 0; i < sResult.length(); i++) {
+                if (tempString.length() != 0 && tempString.charAt(tempString.length() - 1) == '0') {
+                    tempString = tempString.substring(0, tempString.length() - 1);
+                    sResult = sResult.substring(0, sResult.length() - 1);
                 }
             }
-            if(sResult.charAt(sResult.length()-1)==',' || (sResult.charAt(sResult.length()-1)=='.')){
+            if(sResult.charAt(sResult.length()-1)=='.'){
                 sResult = sResult.substring(0,sResult.length()-1);
             }
             resultText.setText(getResources().getString(R.string.result, sResult));
