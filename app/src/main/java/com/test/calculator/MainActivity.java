@@ -30,19 +30,20 @@ public class MainActivity extends AppCompatActivity {
         CalcKeyboard ck = new CalcKeyboard(getBaseContext());
         ck.addCallback(key -> {
             hideKeyboard();
-            if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
-                addDigit(key);
-            }
-            if (key.equals("result")) {
-                getResult();
+            if(check) {
+                if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
+                    addDigit(key);
+                }
+                if (key.equals("result")) {
+                    getResult();
+                }
+                if (key.equals("delete")) {
+                    deleteLast();
+                }
             }
             if (key.equals("clear")) {
                 clear();
             }
-            if(key.equals("delete")){
-                deleteLast();
-            }
-
         });
 
         linearLayout.addView(ck);
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> outArrayString = PostfixConverter.convertString(inString, (check) -> {
             this.check = check;
             if(!check){
+                resultText.setFocusable(false);
                 resultText.setText(getResources().getString(R.string.error));
             }
         });
@@ -181,6 +183,13 @@ public class MainActivity extends AppCompatActivity {
         if (check) {
             double result = Calculate.calculate(outArrayString);
             String sResult = String.format(Locale.getDefault(), "%f", result);
+            for (int i = 0; i < 10; i++) {
+                if (sResult.contains(i + "(") || sResult.contains(")" + i) || sResult.contains(").") || sResult.contains(".(")) {
+                    textField.setText(getResources().getString(R.string.error));
+                    textField.setFocusable(false);
+                    check = false;
+                }
+            }
             sResult = sResult.replace(",", ".");
             int dotIndex = sResult.indexOf(".");
             String tempString = sResult.substring(dotIndex , sResult.length());
@@ -198,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         }
     } else {
         resultText.setText(getResources().getString(R.string.error));
+        textField.setFocusable(false);
     }
     }
 }
