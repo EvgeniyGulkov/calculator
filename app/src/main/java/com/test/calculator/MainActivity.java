@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
                 double result = Calculate.calculate(outArrayString);
                 String sResult = String.format(Locale.getDefault(), "%f", result);
                 for (int i = 0; i < 10; i++) {
-                    if (sResult.contains(i + "(") || sResult.contains(")" + i) || sResult.contains(").") || sResult.contains(".(")) {
+                    if (sResult.contains(i + "(") || sResult.contains(")" + i)
+                            || sResult.contains(").") || sResult.contains(".(")) {
                         textField.setText(getResources().getString(R.string.error));
                         textField.setFocusable(false);
                         check = false;

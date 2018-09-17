@@ -3,6 +3,7 @@ package com.test.calculator;
 import android.content.Context;
 import android.text.InputFilter;
 import android.util.AttributeSet;
+import android.util.Log;
 
 public class MyEditText extends android.support.v7.widget.AppCompatEditText{
 
@@ -122,11 +123,14 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
                 }
             }
             if(lastSelection!=0 && contains("[0-9]",lastDigit) && s.equals(".")){
-                if(!text.substring(0,lastSelection).contains(".")) {
+                if(contains("[-+/*\\u00D7\\u00F7]",text)) {
+                    if (!text.contains(".")) {
+                        addDigit(s, lastSelection);
+                    } else if (!checkLastWord(text.substring(0, lastSelection), text.substring(lastSelection-1, text.length()))) {
+                        addDigit(s, lastSelection);
+                    }
+                } else if (!text.contains(".")){
                     addDigit(s, lastSelection);
-                } else
-                if(!checkLastWord(text.substring(0,lastSelection))){
-                    addDigit(s,lastSelection);
                 }
             }
             return "";
@@ -156,19 +160,35 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
     }
 
     public static boolean contains(String pattern, String content) {
-        return content.matches(pattern);
+        boolean contain=false;
+        for(int i=0;i<content.length();i++){
+            if(content.substring(i,i+1).matches(pattern)){
+                contain=true;
+                break;
+            }
+        }
+        return contain;
     }
 
-    private boolean checkLastWord(String s){
-        StringBuffer stringBuffer = new StringBuffer(s);
+    private boolean checkLastWord(String firstPart,String lastPart){
+        StringBuffer stringBuffer = new StringBuffer(firstPart);
         stringBuffer = stringBuffer.reverse();
         String lastWord = stringBuffer.toString();
         for(int i=0;i<lastWord.length();i++){
             if(contains("[-+*/\\u00D7\\u00F7]",lastWord.substring(i,i+1))){
-                s = s.substring(s.length()-i,s.length());
+                firstPart = firstPart.substring(firstPart.length()-i,firstPart.length());
                 break;
             }
         }
+        lastWord = lastPart;
+        for(int i=0;i<lastWord.length();i++){
+            if(contains("[-+*/\\u00D7\\u00F7]",lastWord.substring(i,i+1))){
+                lastPart = lastPart.substring(0,i);
+                break;
+            }
+        }
+        String s = firstPart+lastPart;
+        Log.d("lastW",s);
         return s.contains(".");
     }
 }
