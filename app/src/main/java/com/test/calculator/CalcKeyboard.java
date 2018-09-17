@@ -78,7 +78,7 @@ public class CalcKeyboard extends LinearLayout{
             String key = "0";
             switch (v.getId()) {
                 case R.id.oneBtn:
-                    key = "8";
+                    key = "1";
                     break;
 
                 case R.id.twoBtn:
