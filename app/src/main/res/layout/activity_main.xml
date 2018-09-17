@@ -16,13 +16,13 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <EditText
+        <com.test.calculator.MyEditText
             android:id="@+id/digitsField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/calcDigitsField"
             android:cursorVisible="false"
-            android:digits="0123456789.%+-&#247;&#215;()*/"
+
             android:ems="10"
             android:inputType="text"
             android:selectAllOnFocus="false"

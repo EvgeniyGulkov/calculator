@@ -4,11 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +13,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText textField;
+    MyEditText textField;
     TextView resultText;
     boolean check;
 
@@ -32,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             hideKeyboard();
             if(check) {
                 if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
-                    addDigit(key);
+                    textField.pressKey(key);
                 }
                 if (key.equals("result")) {
                     getResult();
@@ -42,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (key.equals("clear")) {
+                check=true;
                 clear();
             }
         });
@@ -65,59 +62,6 @@ public class MainActivity extends AppCompatActivity {
         check=true;
         textField = findViewById(R.id.digitsField);
         resultText = findViewById(R.id.resultText);
-
-        textField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                check = true;
-                String s1 = s.toString();
-                if (s1.length() == 2 && !s1.substring(1).equals(".") && s1.substring(0,1).equals("0")) {
-                    s1 = s1.substring(1);
-                    textField.setText(s1);
-                }
-                if (s1.length() == 0) {
-                    s1 = "0";
-                    textField.setText(s1);
-                }
-                String[] s2 = new String[]{
-                        "--", "-+", "-\u00D7", "-\u00F7",
-                        "++", "+-", "+\u00D7", "+\u00F7",
-                        "\u00D7\u00D7", "\u00D7+", "\u00D7-", "\u00D7\u00F7",
-                        "\u00F7\u00F7", "\u00F7+", "\u00F7-", "\u00F7\u00D7",
-                };
-                for (String aS2 : s2) {
-                    if (s1.contains(aS2)) {
-                        textField.setText(s1.replace(aS2, aS2.substring(aS2.length() - 1)));
-                    }
-                }
-
-                s2 = new String[]{"-", "+", "\u00F7", "\u00D7", "*", "/"};
-                for (String aS3 : s2) {
-                    for (int i = 0; i < 10; i++) {
-                        if (s1.contains(aS3 + "0" + i)) {
-                            textField.setText(s1.replace(aS3 + "0" + i, aS3 + i));
-                        }
-                    }
-                }
-
-                s2 = new String[]{"-.","+.","*.","\u00F7.","\u00D7.",".."};
-                for (String aS4 : s2) {
-                    if (s1.contains(aS4)) {
-                        textField.setText(s1.replace(aS4, aS4.substring(0,1)+"0."));
-                    }
-                }
-            }
-        });
     }
 
     private void hideKeyboard() {
@@ -127,27 +71,16 @@ public class MainActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(textField.getWindowToken(), 0);
     }
 
-    private void addDigit(String s) {
-        String s1 = textField.getText().toString();
-        String result;
-        if (s1.equals("0") && !s.equals(".")) {
-            result = s;
-        } else
-            result = s1 + s;
-        textField.setText(result);
-    }
 
     public void deleteLast(){
-        String text = textField.getText().toString();
-        if (text.length() > 1) {
+        if(textField.getText()!=null) {
+            String text = textField.getText().toString();
             textField.setText(text.substring(0, text.length() - 1));
-        } else {
-            textField.setText("0");
         }
     }
 
     public void clear(){
-        textField.setText("0");
+        textField.setText(getResources().getString(R.string.clear));
         resultText.setText("");
     }
 
@@ -166,48 +99,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getResult() {
-    String inString = textField.getText().toString();
-    inString = inString.replace("\u00F7","/");
-    inString = inString.replace("\u00D7","*");
-    String test = inString.replaceAll("[-+*/()]", "");
+    if(textField.getText()!=null) {
+        String inString = textField.getText().toString();
+        inString = inString.replace("\u00F7", "/");
+        inString = inString.replace("\u00D7", "*");
+        String test = inString.replaceAll("[-+*/()]", "");
 
-    if(test.length()>0 && checkDots(inString)) {
-        ArrayList<String> outArrayString = PostfixConverter.convertString(inString, (check) -> {
-            this.check = check;
-            if(!check){
-                resultText.setFocusable(false);
-                resultText.setText(getResources().getString(R.string.error));
-            }
-        });
-
-        if (check) {
-            double result = Calculate.calculate(outArrayString);
-            String sResult = String.format(Locale.getDefault(), "%f", result);
-            for (int i = 0; i < 10; i++) {
-                if (sResult.contains(i + "(") || sResult.contains(")" + i) || sResult.contains(").") || sResult.contains(".(")) {
-                    textField.setText(getResources().getString(R.string.error));
-                    textField.setFocusable(false);
-                    check = false;
+        if (test.length() > 0 && checkDots(inString)) {
+            ArrayList<String> outArrayString = PostfixConverter.convertString(inString, (check) -> {
+                this.check = check;
+                if (!check) {
+                    resultText.setFocusable(false);
+                    resultText.setText(getResources().getString(R.string.error));
                 }
-            }
-            sResult = sResult.replace(",", ".");
-            int dotIndex = sResult.indexOf(".");
-            String tempString = sResult.substring(dotIndex , sResult.length());
-            int max = tempString.length();
-            for (int i = 0; i < max; i++) {
-                if (tempString.length() != 0 && tempString.charAt(tempString.length() - 1) == '0') {
-                    tempString = tempString.substring(0, tempString.length() - 1);
+            });
+
+            if (check) {
+                double result = Calculate.calculate(outArrayString);
+                String sResult = String.format(Locale.getDefault(), "%f", result);
+                for (int i = 0; i < 10; i++) {
+                    if (sResult.contains(i + "(") || sResult.contains(")" + i) || sResult.contains(").") || sResult.contains(".(")) {
+                        textField.setText(getResources().getString(R.string.error));
+                        textField.setFocusable(false);
+                        check = false;
+                    }
+                }
+                sResult = sResult.replace(",", ".");
+                int dotIndex = sResult.indexOf(".");
+                String tempString = sResult.substring(dotIndex, sResult.length());
+                int max = tempString.length();
+                for (int i = 0; i < max; i++) {
+                    if (tempString.length() != 0 && tempString.charAt(tempString.length() - 1) == '0') {
+                        tempString = tempString.substring(0, tempString.length() - 1);
+                        sResult = sResult.substring(0, sResult.length() - 1);
+                    }
+                }
+                if (sResult.charAt(sResult.length() - 1) == '.') {
                     sResult = sResult.substring(0, sResult.length() - 1);
                 }
+                resultText.setText(getResources().getString(R.string.result, sResult));
             }
-            if(sResult.charAt(sResult.length()-1)=='.'){
-                sResult = sResult.substring(0,sResult.length()-1);
-            }
-            resultText.setText(getResources().getString(R.string.result, sResult));
+        } else {
+            resultText.setText(getResources().getString(R.string.error));
+            textField.setFocusable(false);
         }
-    } else {
-        resultText.setText(getResources().getString(R.string.error));
-        textField.setFocusable(false);
     }
     }
 }

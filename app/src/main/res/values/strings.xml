@@ -24,4 +24,5 @@
     <string name="left_delim">(</string>
     <string name="right_delim">)</string>
     <string name="error">Error</string>
+    <string name="clear">clear</string>
 </resources>
