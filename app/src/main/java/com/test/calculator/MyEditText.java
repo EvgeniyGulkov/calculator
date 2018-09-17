@@ -2,8 +2,12 @@ package com.test.calculator;
 
 import android.content.Context;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class MyEditText extends android.support.v7.widget.AppCompatEditText{
 
@@ -27,7 +31,23 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
         init();
     }
 
+
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
+        imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
+    }
+
+    @Override
+    public boolean onCheckIsTextEditor() {
+        hideKeyboard();
+        return super.onCheckIsTextEditor();
+    }
+
     void init(){
+        setCursorVisible(true);
+        this.setInputType(InputType.TYPE_CLASS_NUMBER);
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> filterText(source.toString());
         this.setFilters(new InputFilter[]{inputFilter});
     }

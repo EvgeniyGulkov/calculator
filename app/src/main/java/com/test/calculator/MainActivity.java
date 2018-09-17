@@ -1,10 +1,8 @@
 package com.test.calculator;
 
-import android.content.Context;
-import android.graphics.Rect;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.rootLayout);
         CalcKeyboard ck = new CalcKeyboard(getBaseContext());
         ck.addCallback(key -> {
-            hideKeyboard();
             if(check) {
                 if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
                     textField.pressKey(key);
@@ -44,58 +41,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
         linearLayout.addView(ck);
-        linearLayout.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-
-            Rect r = new Rect();
-            linearLayout.getWindowVisibleDisplayFrame(r);
-            int screenHeight = linearLayout.getRootView().getHeight();
-
-            int keypadHeight = screenHeight - r.bottom;
-
-            if (keypadHeight > screenHeight * 0.15) {
-                textField.setCursorVisible(true);
-            } else {
-                textField.setCursorVisible(false);
-            }
-        });
 
         check=true;
         textField = findViewById(R.id.digitsField);
         resultText = findViewById(R.id.resultText);
     }
 
-    private void hideKeyboard() {
-        textField.clearFocus();
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-        assert imm != null;
-        imm.hideSoftInputFromWindow(textField.getWindowToken(), 0);
-    }
-
-
     public void deleteLast(){
         if(textField.getText()!=null) {
             String text = textField.getText().toString();
             textField.setText(text.substring(0, text.length() - 1));
+            textField.setSelection(textField.getText().length());
         }
     }
 
     public void clear(){
         textField.setText(getResources().getString(R.string.clear));
         resultText.setText("");
-    }
-
-    public boolean checkDots(String s) {
-        boolean checkFlag=true;
-        for (String res : s.split("-|\\+|\\u00F7|\\u00D7|\\*/")) {
-            int countDots=0;
-            if(res.contains(".")){
-                for (char c : res.toCharArray()){
-                    if (c == '.') countDots++;
-                }
-            }
-            checkFlag = countDots <= 1;
-        }
-        return checkFlag;
     }
 
     private void getResult() {
@@ -105,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         inString = inString.replace("\u00D7", "*");
         String test = inString.replaceAll("[-+*/()]", "");
 
-        if (test.length() > 0 && checkDots(inString)) {
+        if (test.length() > 0) {
             ArrayList<String> outArrayString = PostfixConverter.convertString(inString, (check) -> {
                 this.check = check;
                 if (!check) {
