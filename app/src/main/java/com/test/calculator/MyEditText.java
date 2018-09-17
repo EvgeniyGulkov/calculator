@@ -5,8 +5,6 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 public class MyEditText extends android.support.v7.widget.AppCompatEditText{
