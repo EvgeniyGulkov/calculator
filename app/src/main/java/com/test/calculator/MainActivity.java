@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.rootLayout);
         CalcKeyboard ck = new CalcKeyboard(getBaseContext());
         ck.addCallback(key -> {
-            if(check) {
+            check=true;
                 if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
                     textField.pressKey(key);
                 }
@@ -33,9 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 if (key.equals("delete")) {
                     deleteLast();
                 }
-            }
             if (key.equals("clear")) {
-                check=true;
                 clear();
             }
         });
@@ -71,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<String> outArrayString = PostfixConverter.convertString(inString, (check) -> {
                 this.check = check;
                 if (!check) {
-                    resultText.setFocusable(false);
                     resultText.setText(getResources().getString(R.string.error));
                 }
             });
@@ -83,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                     if (sResult.contains(i + "(") || sResult.contains(")" + i)
                             || sResult.contains(").") || sResult.contains(".(")) {
                         textField.setText(getResources().getString(R.string.error));
-                        textField.setFocusable(false);
                         check = false;
                     }
                 }
@@ -104,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             resultText.setText(getResources().getString(R.string.error));
-            textField.setFocusable(false);
         }
     }
     }

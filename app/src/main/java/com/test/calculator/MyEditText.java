@@ -2,7 +2,6 @@ package com.test.calculator;
 
 import android.content.Context;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -45,9 +44,8 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
 
     void init(){
         setCursorVisible(true);
-        this.setInputType(InputType.TYPE_CLASS_NUMBER);
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> filterText(source.toString());
-        this.setFilters(new InputFilter[]{inputFilter});
+        this.setFilters(new InputFilter[]{inputFilter,new InputFilter.LengthFilter(88)});
     }
 
     @Override
@@ -77,7 +75,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
     }
 
     public void addDigit(String c,int selection) {
-        if(sb.length()!=0) {
+        if(sb.length()!=0 && sb.length()<88) {
             if(sb.toString().equals("0") && !c.equals(".")) {
                 ignore=true;
                     sb.replace(0, 1, String.valueOf(c));
@@ -96,7 +94,11 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
     private void updateText(int selection){
         setText(sb);
         if(sb.length()>1) {
-            setSelection(selection + 1);
+            if(sb.length()<88) {
+                setSelection(selection + 1);
+            } else {
+                setSelection(selection);
+            }
         }
         else {
             setSelection(1);
@@ -107,6 +109,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
         String text = sb.toString();
 
         if(s.equals("clear")){
+            ignore=false;
             return "0";
 
         } else if (contains("[a-zA-Z$&,:_;=?@#|'<>^!{}\\u005C\\u0022]", s)) {
@@ -130,13 +133,13 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
             }
 
             if(s.equals(")")){
-                if(!checkDelim(text.substring(0,lastSelection))
-                && contains("[0-9]",lastDigit)){
+                if(!checkDelim(text)
+                && contains("[)0-9]",lastDigit)){
                     addDigit(s,lastSelection);
                 }
             }
             if(s.equals("(")){
-                if(contains("[-+/*\\u00D7\\u00F7]",lastDigit) || text.equals("0")){
+                if(contains("[-+/*\\u00D7\\u00F7(]",lastDigit) || text.equals("0")){
                     addDigit(s,lastSelection);
                 }
             }
