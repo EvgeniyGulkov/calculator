@@ -77,7 +77,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
         ignore=true;
         sb.deleteCharAt(selection-1);
         setText(sb);
-        setSelection(selection-1);
+        setSelection(selection - 1);
     }
 
     private void updateText(int selection){
@@ -148,10 +148,14 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
                 return "";
             }
             else if (s.length()==1 && text.equals("0")) {
-                if (contains("[0-9-(]", s)) {
+                if (contains("[1-9-(]", s)) {
                     ignore = true;
                     replaceDigit(s, 1);
-                } return "";
+                }
+                if(s.equals(".")){
+                    addDigit(s,1);
+                }
+                return "";
             }
         else
             return null;
