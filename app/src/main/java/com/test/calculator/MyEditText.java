@@ -3,7 +3,6 @@ package com.test.calculator;
 import android.content.Context;
 import android.text.InputFilter;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 public class MyEditText extends android.support.v7.widget.AppCompatEditText{
@@ -28,8 +27,6 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
         init();
     }
 
-
-
     public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         assert imm != null;
@@ -53,20 +50,12 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
         sb = new StringBuffer(text);
         if(sb.toString().equals("0")){
             setSelection(1);
-        }
-
-        if(sb.length()==1 && !sb.toString().equals("0")){
+        } else {
             ignore=false;
         }
 
         if(sb.length()==0){
             setText(getResources().getString(R.string.clear));
-        }
-
-        for(int i=0;i<10;i++) {
-            if (sb.length()>1 && sb.toString().equals("0" + i)) {
-                setText(String.valueOf(i));
-            }
         }
     }
 
@@ -75,15 +64,8 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
     }
 
     public void addDigit(String c,int selection) {
-        if(sb.length()!=0 && sb.length()<88) {
-            if(sb.toString().equals("0") && !c.equals(".")) {
-                ignore=true;
-                    sb.replace(0, 1, String.valueOf(c));
-            } else {
-                sb.insert(selection, c);
-            }
+            sb.insert(selection, c);
             updateText(selection);
-        }
     }
 
     private void replaceDigit(String c,int selection){
@@ -91,22 +73,28 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
         updateText(selection-1);
     }
 
+    private void deleteDigit(int selection){
+        ignore=true;
+        sb.deleteCharAt(selection-1);
+        setText(sb);
+        setSelection(selection-1);
+    }
+
     private void updateText(int selection){
         setText(sb);
-        if(sb.length()>1) {
             if(sb.length()<88) {
                 setSelection(selection + 1);
             } else {
                 setSelection(selection);
             }
-        }
-        else {
-            setSelection(1);
-        }
     }
 ////////////////////////////////////////// FILTER ////////////////////////////////////////////////////////////////
-    private String filterText(String s){
+    private String filterText(String s) {
         String text = sb.toString();
+
+        if(s.equals("delete") && lastSelection>0){
+            deleteDigit(lastSelection);
+        }
 
         if(s.equals("clear")){
             ignore=false;
@@ -115,48 +103,56 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
         } else if (contains("[a-zA-Z$&,:_;=?@#|'<>^!{}\\u005C\\u0022]", s)) {
             return "";
 
-        } else if (s.length()==1 && !ignore) {
-            if(!lastDigit.equals(")") && contains("[0-9]",s)) {
-                addDigit(s, lastSelection);
-            }
+        } else if(s.length()==1 && !text.equals("0") && !ignore) {
 
-            if(text.equals("0") || lastDigit.equals("(") && !lastDigit.equals(".")) {
-                if(s.equals("-")) {
-                    addDigit(s, lastSelection);
-                }
-            } else if (!text.equals("0") && !lastDigit.equals(".") && contains("[-+/*\\u00D7\\u00F7]",s)) {
-                if(!text.equals("-") && contains("[-+/*\\u00D7\\u00F7]",lastDigit)){
-                    replaceDigit(s,lastSelection);
-                } else if(!text.equals("0")&& !text.equals("-") && !lastDigit.equals("(")){
-                    addDigit(s,lastSelection);
-                }
-            }
-
-            if(s.equals(")")){
-                if(!checkDelim(text)
-                && contains("[)0-9]",lastDigit)){
-                    addDigit(s,lastSelection);
-                }
-            }
-            if(s.equals("(")){
-                if(contains("[-+/*\\u00D7\\u00F7(]",lastDigit) || text.equals("0")){
-                    addDigit(s,lastSelection);
-                }
-            }
-            if(lastSelection!=0 && contains("[0-9]",lastDigit) && s.equals(".")){
-                if(contains("[-+/*\\u00D7\\u00F7]",text)) {
-                    if (!text.contains(".")) {
+                if (!lastDigit.equals(")") && contains("[0-9]", s)) {
                         addDigit(s, lastSelection);
-                    } else if (!checkLastWord(text.substring(0, lastSelection), text.substring(lastSelection-1, text.length()))) {
+                }
+
+                if (!lastDigit.equals(".") && contains("[-+/*\\u00D7\\u00F7]", s)) {
+                    if (!text.equals("-") && contains("[-+/*\\u00D7\\u00F7]", lastDigit)) {
+                        replaceDigit(s, lastSelection);
+                    } else if (!text.equals("-") && !lastDigit.equals("(")) {
                         addDigit(s, lastSelection);
                     }
-                } else if (!text.contains(".")){
+                }
+
+                if (lastDigit.equals("(") && !lastDigit.equals(".") && s.equals("-")) {
                     addDigit(s, lastSelection);
                 }
-            }
-            return "";
-        }
 
+                if (s.equals(")")) {
+                    if (!checkDelim(text)
+                            && contains("[)0-9]", lastDigit)) {
+                        addDigit(s, lastSelection);
+                    }
+                }
+
+                if (s.equals("(")) {
+                    if (contains("[-+/*\\u00D7\\u00F7(]", lastDigit) || text.equals("0")) {
+                        addDigit(s, lastSelection);
+                    }
+                }
+
+                if (lastSelection != 0 && contains("[0-9]", lastDigit) && s.equals(".")) {
+                    if (contains("[-+/*\\u00D7\\u00F7]", text)) {
+                        if (!text.contains(".")) {
+                            addDigit(s, lastSelection);
+                        } else if (!checkLastWord(text.substring(0, lastSelection), text.substring(lastSelection - 1, text.length()))) {
+                            addDigit(s, lastSelection);
+                        }
+                    } else if (!text.contains(".")) {
+                        addDigit(s, lastSelection);
+                    }
+                }
+                return "";
+            }
+            else if (s.length()==1 && text.equals("0")) {
+                if (contains("[0-9-(]", s)) {
+                    ignore = true;
+                    replaceDigit(s, 1);
+                } return "";
+            }
         else
             return null;
     }
@@ -174,7 +170,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
         lastSelection = selStart;
-        if(sb!=null && selStart>0) {
+        if(sb!=null &&  selStart>0) {
             lastDigit = sb.substring(lastSelection-1,lastSelection);
         }
         super.onSelectionChanged(selStart, selEnd);
@@ -209,7 +205,6 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
             }
         }
         String s = firstPart+lastPart;
-        Log.d("lastW",s);
         return s.contains(".");
     }
 }

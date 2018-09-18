@@ -24,18 +24,15 @@ public class MainActivity extends AppCompatActivity {
         CalcKeyboard ck = new CalcKeyboard(getBaseContext());
         ck.addCallback(key -> {
             check=true;
-                if (!key.equals("result") && !key.equals("delete") && !key.equals("clear")) {
+                if (!key.equals("result") && !key.equals("clear")) {
                     textField.pressKey(key);
                 }
                 if (key.equals("result")) {
                     getResult();
                 }
-                if (key.equals("delete")) {
-                    deleteLast();
+                if (key.equals("clear")) {
+                    clear();
                 }
-            if (key.equals("clear")) {
-                clear();
-            }
         });
 
         linearLayout.addView(ck);
@@ -43,14 +40,6 @@ public class MainActivity extends AppCompatActivity {
         check=true;
         textField = findViewById(R.id.digitsField);
         resultText = findViewById(R.id.resultText);
-    }
-
-    public void deleteLast(){
-        if(textField.getText()!=null) {
-            String text = textField.getText().toString();
-            textField.setText(text.substring(0, text.length() - 1));
-            textField.setSelection(textField.getText().length());
-        }
     }
 
     public void clear(){
