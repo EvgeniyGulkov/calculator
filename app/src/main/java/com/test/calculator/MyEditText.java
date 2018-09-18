@@ -135,15 +135,13 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
                 }
 
                 if (lastSelection != 0 && contains("[0-9]", lastDigit) && s.equals(".")) {
-                    if (contains("[-+/*\\u00D7\\u00F7]", text)) {
-                        if (!text.contains(".")) {
-                            addDigit(s, lastSelection);
-                        } else if (!checkLastWord(text.substring(0, lastSelection), text.substring(lastSelection - 1, text.length()))) {
+                    if(!text.contains(".")) {
+                        addDigit(s,lastSelection);
+                    } else
+                    if (contains("[-+/*\\u00D7\\u00F7]", text)
+                    && !checkLastWord(text.substring(0, lastSelection), text.substring(lastSelection - 1, text.length()))) {
                             addDigit(s, lastSelection);
                         }
-                    } else if (!text.contains(".")) {
-                        addDigit(s, lastSelection);
-                    }
                 }
                 return "";
             }
