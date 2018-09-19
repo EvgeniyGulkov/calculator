@@ -11,6 +11,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
     int lastSelection;
     String lastDigit;
     boolean ignore;
+    int maxLength;
 
     public MyEditText(Context context) {
         super(context);
@@ -40,9 +41,10 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
     }
 
     void init(){
+        maxLength=48;
         setCursorVisible(true);
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> filterText(source.toString());
-        this.setFilters(new InputFilter[]{inputFilter,new InputFilter.LengthFilter(88)});
+        this.setFilters(new InputFilter[]{inputFilter,new InputFilter.LengthFilter(maxLength)});
     }
 
     @Override
@@ -82,7 +84,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
 
     private void updateText(int selection){
         setText(sb);
-            if(sb.length()<88) {
+            if(sb.length()<maxLength) {
                 setSelection(selection + 1);
             } else {
                 setSelection(selection);
@@ -105,7 +107,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
 
         } else if(s.length()==1 && !text.equals("0") && !ignore) {
 
-                if (!lastDigit.equals(")") && contains("[0-9]", s)) {
+                if (contains("[0-9]", s)) {
                         addDigit(s, lastSelection);
                 }
 
@@ -129,9 +131,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText{
                 }
 
                 if (s.equals("(")) {
-                    if (contains("[-+/*\\u00D7\\u00F7(]", lastDigit) || text.equals("0")) {
                         addDigit(s, lastSelection);
-                    }
                 }
 
                 if (lastSelection != 0 && contains("[0-9]", lastDigit) && s.equals(".")) {

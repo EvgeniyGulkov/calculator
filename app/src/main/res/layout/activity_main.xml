@@ -5,7 +5,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
+    android:background="@android:color/black"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -19,25 +19,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_margin="20dp"
             android:orientation="vertical">
 
             <com.test.calculator.MyEditText
                 android:id="@+id/digitsField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/calcDigitsField"
                 android:inputType="textMultiLine"
                 android:maxLines="4"
                 android:text="@string/digits_field_default"
                 android:textAlignment="textEnd"
+                android:textColor="@android:color/white"
                 android:textIsSelectable="false"
-                android:textSize="30sp" />
+                android:textSize="45sp" />
 
             <TextView
                 android:id="@+id/resultText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="textEnd"
+                android:textColor="@android:color/white"
                 android:textSize="30sp"
                 android:visibility="visible" />
 

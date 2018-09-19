@@ -4,6 +4,7 @@
     android:id="@+id/rootKL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,16 +15,20 @@
 
         <Button
             android:id="@+id/delLastBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/del_last_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/leftDelim"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:focusableInTouchMode="false"
             android:text="@string/left_delim"
@@ -31,8 +36,10 @@
 
         <Button
             android:id="@+id/rightDelim"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:focusableInTouchMode="false"
             android:text="@string/right_delim"
@@ -40,8 +47,10 @@
 
         <Button
             android:id="@+id/divisionBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/division_btn"
             android:textSize="30sp" />
@@ -55,32 +64,40 @@
 
         <Button
             android:id="@+id/seven_btn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/seven_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/eightBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/eight_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/nineBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/nine_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/multiplBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/multipl_btn"
             android:textSize="30sp" />
@@ -94,32 +111,40 @@
 
         <Button
             android:id="@+id/fourBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/four_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/fiveBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/five_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/sixBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/six_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/minusBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/minus_btn"
             android:textSize="30sp" />
@@ -133,32 +158,40 @@
 
         <Button
             android:id="@+id/oneBtn"
+            style="@style/calcButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/one_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/twoBtn"
+            style="@style/calcButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/two_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/threeBtn"
+            style="@style/calcButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/three_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/plusBtn"
+            style="@style/calcButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/plus_btn"
             android:textSize="30sp" />
@@ -172,32 +205,40 @@
 
         <Button
             android:id="@+id/clear_btn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/clear_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/zeroBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/zero_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/dotBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/dot_btn"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/resultBtn"
+            style="@style/calcButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/result_btn"
             android:textSize="30sp" />
